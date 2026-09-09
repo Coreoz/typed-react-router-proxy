@@ -1,0 +1,69 @@
+{
+  "name": "typed-react-router-proxy",
+  "version": "0.1.0",
+  "description": "A powerful, type-safe route management proxy utility for React Router",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts --clean",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write ."
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "react-router": "^6.0.0 || ^7.0.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/react": "^18.3.0",
+    "@vitest/coverage-v8": "^5.0.0",
+    "eslint": "^10.10.0",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.9.6",
+    "react": "^18.3.0",
+    "react-router": "^6.26.0",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.70.0",
+    "vite": "^8.2.2",
+    "vitest": "^5.0.0"
+  },
+  "keywords": [
+    "react",
+    "react-router",
+    "router",
+    "typescript",
+    "typesafe",
+    "proxy",
+    "wrapper",
+    "navigation"
+  ],
+  "author": "Lucas Amiaud",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/coreoz/typed-react-router-proxy.git"
+  },
+  "bugs": {
+    "url": "https://github.com/coreoz/typed-react-router-proxy/issues"
+  },
+  "packageManager": "yarn@4.18.0"
+}
