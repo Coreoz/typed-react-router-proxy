@@ -60,10 +60,10 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/coreoz/typed-react-router-proxy.git"
+    "url": "https://github.com/Coreoz/typed-react-router-proxy"
   },
   "bugs": {
-    "url": "https://github.com/coreoz/typed-react-router-proxy/issues"
+    "url": "https://github.com/Coreoz/typed-react-router-proxy/issues"
   },
   "packageManager": "yarn@4.18.0"
 }
