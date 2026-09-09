@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   release:
-    name: Publish to NPM
+    name: Publish to NPM (Staged)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -30,7 +30,7 @@ jobs:
           TAG=${GITHUB_REF#refs/tags/}
           VERSION=${TAG#v}
           echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "Building and publishing version $VERSION"
+          echo "Building and staging version $VERSION"
 
       - name: Enable Corepack
         run: corepack enable
@@ -40,7 +40,9 @@ jobs:
         with:
           node-version: 22.x
           cache: yarn
-          registry-url: 'https://registry.npmjs.org'
+
+      - name: Upgrade npm to support staged publishing
+        run: npm install -g npm@latest
 
       - name: Install dependencies
         run: yarn install --immutable
@@ -61,5 +63,5 @@ jobs:
       - name: Build package
         run: yarn build
 
-      - name: Publish to NPM (Trusted Publisher)
-        run: npm publish --access public --provenance
+      - name: Publish to NPM Staging (Trusted Publisher)
+        run: npm stage publish --access public --provenance
