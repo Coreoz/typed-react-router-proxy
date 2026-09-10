@@ -1,4 +1,9 @@
-# Plume React Router Proxy
+# Typed React Router Proxy
+
+[![npm version](https://img.shields.io/npm/v/typed-react-router-proxy?style=for-the-badge)](https://www.npmjs.com/package/typed-react-router-proxy)
+[![npm downloads](https://img.shields.io/npm/dm/typed-react-router-proxy?style=for-the-badge)](https://www.npmjs.com/package/typed-react-router-proxy)
+[![license](https://img.shields.io/npm/l/typed-react-router-proxy?style=for-the-badge)](./LICENSE)
+[![coverage](https://img.shields.io/badge/coverage-98.14%25-brightgreen?style=for-the-badge)](./README.md)
 
 A powerful, type-safe route management utility for [React Router](https://reactrouter.com/home).
 
