@@ -1,10 +1,12 @@
 import type {
   AnyRouteDefinition,
+  BuildRouteArgs,
   ExtractRouteParams,
   RouteDefinition,
   RouteDefinitionPathOptions,
 } from '../types';
 import { stripUrlFragment } from '../utils';
+import { buildRoute } from './buildRoute';
 
 /**
  * Creates a new route definition.
@@ -47,6 +49,11 @@ export const defineRoute = <
     T
   > {
     return this as unknown as RouteDefinition<ParentParams & ExtractRouteParams<Path>, T>;
+  },
+  format(
+    ...args: BuildRouteArgs<ParentParams & ExtractRouteParams<Path>, QueryParams>
+  ): string {
+    return buildRoute(this, ...args).link;
   },
 });
 

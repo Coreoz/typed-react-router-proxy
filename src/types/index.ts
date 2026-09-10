@@ -1,3 +1,20 @@
+export type StaticRouteConfig<P, Q> = {
+  /**
+   * The absolute link for the route.
+   */
+  link: string,
+
+  /**
+   * The route parameters.
+   */
+  params?: P,
+
+  /**
+   * The query parameters.
+   */
+  queryParams?: Q,
+};
+
 /**
  * Maps a route enum/key to its path and parameter type.
  */
@@ -16,22 +33,7 @@ export type RouteConfig<Name extends string | number | symbol, P, Q> = {
    * Replaces the current route with the given route.
    */
   replace: () => void,
-
-  /**
-   * The absolute link for the route.
-   */
-  link: string,
-
-  /**
-   * The route parameters.
-   */
-  params?: P,
-
-  /**
-   * The query parameters.
-   */
-  queryParams?: Q,
-};
+} & StaticRouteConfig<P, Q>;
 
 export type AnyRouteDefinition = RouteDefinition<Record<string, unknown>>;
 
@@ -52,6 +54,10 @@ export type ExtractRouteParams<Path extends string> =
       : Record<never, never>;
 
 export type RouteDefinitionPathOptions = { relativeTo?: AnyRouteDefinition };
+
+export type BuildRouteArgs<Params, QueryParams> = Record<string, never> extends Params
+  ? [queryParams?: Partial<QueryParams>]
+  : [params: Params, queryParams?: Partial<QueryParams>];
 
 /**
  * A route definition that can be composed.
@@ -81,6 +87,11 @@ export interface RouteDefinition<
    * Adds query parameters to the route.
    */
   withQueryParams<T extends Record<string, unknown>>(): RouteDefinition<Params, T>,
+
+  /**
+   * Statically builds the URL for this route with typed parameters and query parameters.
+   */
+  format(...args: BuildRouteArgs<Params, QueryParams>): string,
 }
 
 // Si Params ne contient aucune clé, on n'attend aucun argument.

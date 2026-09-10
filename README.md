@@ -12,6 +12,7 @@ It provides a declarative way to define routes with hierarchy, automatically han
 - **Hierarchical & Modular Routes**: Define nested routes and inherit paths from parent routes across modules using `{ parent: ... }` or `.extend()`.
 - **Relative Path Calculation (`path({ relativeTo })`)**: Compute relative paths for nested React Router route definitions without manual string slicing.
 - **Navigation Proxy**: Navigate using an intuitive, typed API (`push`, `replace`, `link`, `params`, `queryParams`, `name`).
+- **Standalone Route Building (`buildRoute`)**: Build URLs and typed route configurations outside React components without navigation functions.
 - **Query Parameters**: Strongly-typed query parameters with automatic formatting and filtering of `null`/`undefined` values (`withQueryParams`).
 - **URL Sanitization**: Automatically normalizes leading and trailing slashes.
 - **React Router Integration**: Works seamlessly with `react-router` (`useNavigate`, `useRoutes`, `<Link>`, `<NavLink>`).
@@ -24,6 +25,7 @@ Import the utility from `typed-react-router-proxy`:
 
 ```typescript
 import {
+  buildRoute,
   createRoutes,
   defineRoute,
   defineRouteConfig,
@@ -331,6 +333,31 @@ console.log(routeInfo.queryParams); // { tab: 'info' }
 
 ---
 
+### Use Case 6: Building Routes Without Navigation (`buildRoute`)
+
+`buildRoute` allows manipulating routes, resolving URLs, and getting typed parameters/query parameters statically without requiring React hooks or navigation functions (`push`, `replace`). This is useful outside React components, in utilities, services, server-side code, or when generating links without navigation hooks:
+
+```typescript
+import { buildRoute } from 'typed-react-router-proxy';
+import { userRoutes } from './users-routes.config';
+
+// 1. Route without parameters
+const listRoute = buildRoute(userRoutes.list);
+console.log(listRoute.link); // "/users"
+
+// 2. Route with path parameters
+const detailRoute = buildRoute(userRoutes.detail, { userId: '123' });
+console.log(detailRoute.link);   // "/users/123"
+console.log(detailRoute.params); // { userId: '123' }
+
+// 3. Route with path parameters and query parameters
+const searchRoute = buildRoute(userRoutes.search, { query: 'john', page: 1 });
+console.log(searchRoute.link);        // "/users/search?query=john&page=1"
+console.log(searchRoute.queryParams); // { query: 'john', page: 1 }
+```
+
+---
+
 ## API Reference
 
 ### `defineRoute(path, options?)`
@@ -351,6 +378,14 @@ Takes a route configuration and returns:
 - **`useRoutes()`**: A React Hook returning a proxy object with callable route methods.
 - **`routes`**: The original static `RouteDefinition` configuration object (for defining router trees and calculating relative paths).
 
+### `buildRoute(route, ...args)`
+
+Statically builds the URL and returns a route configuration object for a `RouteDefinition` with typed path and query parameters, without requiring navigation functions.
+
+- **`route`**: `RouteDefinition` - The route definition to build.
+- **`...args`**: Path parameters (if required) and query parameters (if defined).
+- **Returns**: `StaticRouteConfig` (`{ link: string, params: Params, queryParams: QueryParams }`).
+
 ---
 
 ### `RouteDefinition` Methods & Properties
@@ -361,12 +396,25 @@ Takes a route configuration and returns:
 | `path(options?)` | `(options?: { relativeTo?: RouteDefinition }) => string` | Returns the resolved path string. If `relativeTo` is provided, stops at the specified ancestor. |
 | `extend(nextPath)` | `(nextPath: string) => RouteDefinition` | Creates a child route segment inheriting parameters from the parent. |
 | `withQueryParams<T>()` | `<T>() => RouteDefinition` | Attaches a TypeScript query parameter type to the route definition. |
+| `format(...args)` | `(...args: BuildRouteArgs) => string` | Statically builds and returns the resolved URL string. |
+
+---
+
+### Static Route Object (`StaticRouteConfig`)
+
+Returned by `buildRoute(route, ...args)`:
+
+| Property | Type | Description |
+| :--- | :--- | :--- |
+| `link` | `string` | The complete URL string with path and query parameters resolved. |
+| `params` | `Params \| undefined` | The path parameters passed to `buildRoute`. |
+| `queryParams` | `QueryParams \| undefined` | The query parameters passed to `buildRoute`. |
 
 ---
 
 ### Route Proxy Invocation Object (`RouteConfig`)
 
-When invoking a route on the proxy returned by `useRoutes()` (e.g., `routes.DETAIL(...)`):
+When invoking a route on the proxy returned by `useRoutes()` (e.g., `routes.DETAIL(...)`), extends `StaticRouteConfig` with navigation methods:
 
 | Property | Type | Description |
 | :--- | :--- | :--- |
